@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h> // for sleep function
 
 // Instructions for Blackjack Game
 void printInstructions() {
@@ -87,7 +88,23 @@ void dealCards(Card deck[], Player* player, int numCards) {
 void displayHand(Player* player) {
     int i;
     for (i = 0; i < player->numCards; i++) {
+        printf("Card %d: ", i + 1);
         // Print card representation
+        switch (player->hand[i].rank) {
+            case ACE: printf("A"); break;
+            case JACK: printf("J"); break;
+            case QUEEN: printf("Q"); break;
+            case KING: printf("K"); break;
+            default: printf("%d", player->hand[i].rank); break;
+        }
+        switch (player->hand[i].suit) {
+            case HEARTS: printf("♥"); break;
+            case DIAMONDS: printf("♦"); break;
+            case CLUBS: printf("♣"); break;
+            case SPADES: printf("♠"); break;
+        }
+        printf("\n");
+        usleep(500000); // Sleep for 0.5 seconds for a more dramatic effect
     }
 }
 
@@ -120,8 +137,9 @@ void playGame(Card deck[], Player* player, Player* dealer) {
 
     printf("Dealer's hand:\n");
     printf("Card 1: [Hidden]\n");
-    printf("Card 2: [Visible]\n");
-    printf("Dealer's total: %d\n", dealer->hand[1].rank); // Display only the visible card of the dealer
+    printf("Card 2: ");
+    displayHand(dealer); // Display the visible card of the dealer
+    printf("Dealer's total: %d\n", dealer->hand[1].rank);
 
     while (1) {
         printf("Hit (h) or Stand (s): ");
@@ -166,3 +184,4 @@ void playGame(Card deck[], Player* player, Player* dealer) {
         printf("It's a tie!\n");
     }
 }
+
